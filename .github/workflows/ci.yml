@@ -47,5 +47,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run tests
-        run: npm test
+      - name: Run tests and save output
+        run: ./save-test-output.sh
+                                  
+      - name: Upload test output artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-output
+          path: test-output.txt
