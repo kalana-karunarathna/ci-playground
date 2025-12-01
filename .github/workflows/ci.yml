@@ -1,13 +1,31 @@
 name: Node CI
 
-# When to run the workflow
 on:
-  push:           # runs on every push
-  pull_request:   # runs on every PR
+  push:
+  pull_request:
 
 jobs:
-  test:           # job name
-    runs-on: ubuntu-latest   # which OS the runner uses
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run ESLint
+        run: npm run lint
+
+  test:
+    runs-on: ubuntu-latest
+    needs: lint   # only run tests if lint job passes
 
     steps:
       - name: Checkout code
