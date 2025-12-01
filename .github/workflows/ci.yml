@@ -49,7 +49,7 @@ jobs:
 
       - name: Run tests and save output
         run: ./save-test-output.sh
-                                  
+
       - name: Upload test output artifact
         uses: actions/upload-artifact@v4
         with:
@@ -59,3 +59,17 @@ jobs:
           compression-level: 6
           overwrite: false
           include-hidden-files: false
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: test   # only run Docker job if tests passed
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t ci-playground:${{ github.sha }} .
+
+      - name: Run tests inside Docker
+        run: docker run ci-playground:${{ github.sha }}
